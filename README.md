@@ -52,6 +52,7 @@ These DAGs use pools to make execution domains visible in the graph and to make 
 ## Notes
 
 - The DAG code is portable Airflow code. The actual Remote Execution routing is configured in Astro, not in DAG syntax.
+- The examples avoid XCom-based coordination so they remain compatible with remote execution environments where XCom is unavailable.
 - The `remote_execution` pool in these examples is a modeling aid for concurrency and intent.
 - The Blueprint examples use `airflow-blueprint` and compose DAGs from YAML via `dags/blueprint_dag_loader.py`.
 - `blueprint/generated-schemas/` is committed intentionally so Astro IDE and other editors can use the current Blueprint schemas without an extra generation step after clone.

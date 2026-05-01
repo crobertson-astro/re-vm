@@ -4,11 +4,12 @@ import json
 from datetime import timedelta
 
 import pendulum
-from airflow.sdk import DAG, task
 from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
     "owner": "data-platform",
@@ -53,6 +54,7 @@ with DAG(
                 "business_date": "{{ ds }}",
                 "dataset": "positions",
                 "source_system": "onprem-linux",
+                "manifest_id": "{{ run_id }}",
             }
         ),
         response_filter=parse_json_response,
@@ -69,7 +71,7 @@ with DAG(
                 "notebook_path": "/Shared/analytics/hybrid_positions_enrichment",
                 "base_parameters": {
                     "business_date": "{{ ds }}",
-                    "manifest_id": "{{ ti.xcom_pull(task_ids='register_manifest')['manifest_id'] }}",
+                    "manifest_id": "{{ run_id }}",
                 },
             },
         },
@@ -79,17 +81,13 @@ with DAG(
     publish_to_snowflake = SnowflakeSqlApiOperator(
         task_id="publish_to_snowflake",
         snowflake_conn_id="snowflake_default",
-        sql="CALL ANALYTICS.GOLD.SP_LOAD_FROM_MANIFEST('{{ ti.xcom_pull(task_ids='register_manifest')['manifest_id'] }}')",
+        sql="CALL ANALYTICS.GOLD.SP_LOAD_FROM_MANIFEST('{{ run_id }}')",
         warehouse="TRANSFORMING",
         database="ANALYTICS",
         schema="GOLD",
         pool="snowflake_queries",
     )
 
-    @task(task_id="emit_hybrid_summary")
-    def emit_hybrid_summary() -> str:
-        return "On-prem extract was handed off to cloud orchestration successfully."
+    emit_hybrid_summary = EmptyOperator(task_id="emit_hybrid_summary")
 
-    hybrid_summary = emit_hybrid_summary()
-
-    export_from_onprem >> register_manifest >> run_cloud_enrichment >> publish_to_snowflake >> hybrid_summary
+    export_from_onprem >> register_manifest >> run_cloud_enrichment >> publish_to_snowflake >> emit_hybrid_summary

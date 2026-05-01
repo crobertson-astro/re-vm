@@ -4,9 +4,10 @@ import json
 from datetime import timedelta
 
 import pendulum
-from airflow.sdk import DAG, task
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
     "owner": "data-platform",
@@ -53,6 +54,7 @@ with DAG(
                 "business_date": "{{ ds }}",
                 "requested_by": "airflow",
                 "batch_name": "weekly-risk-batch",
+                "client_run_id": "{{ run_id }}",
             }
         ),
         response_filter=parse_json_response,
@@ -62,7 +64,7 @@ with DAG(
     wait_for_batch_completion = HttpSensor(
         task_id="wait_for_batch_completion",
         http_conn_id="batch_service_api",
-        endpoint="/api/v1/batches/risk/runs/{{ ti.xcom_pull(task_ids='submit_batch')['run_id'] }}",
+        endpoint="/api/v1/batches/risk/runs/{{ run_id }}",
         response_check=batch_run_completed,
         poke_interval=300,
         timeout=int(timedelta(hours=10).total_seconds()),
@@ -70,10 +72,6 @@ with DAG(
         pool="cloud_control_plane",
     )
 
-    @task(task_id="publish_batch_summary")
-    def publish_batch_summary(run_id: str) -> str:
-        return f"Submitted and monitored batch run {run_id}."
+    publish_batch_summary = EmptyOperator(task_id="publish_batch_summary")
 
-    batch_summary = publish_batch_summary(submit_batch.output["run_id"])
-
-    submit_batch >> wait_for_batch_completion >> batch_summary
+    submit_batch >> wait_for_batch_completion >> publish_batch_summary

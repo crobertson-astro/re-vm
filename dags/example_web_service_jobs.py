@@ -4,9 +4,10 @@ import json
 from datetime import timedelta
 
 import pendulum
-from airflow.sdk import DAG, task
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
     "owner": "data-platform",
@@ -47,6 +48,7 @@ with DAG(
             {
                 "business_date": "{{ ds }}",
                 "workflow": "cash-balance-reconciliation",
+                "request_id": "{{ run_id }}",
             }
         ),
         response_filter=parse_json_response,
@@ -56,7 +58,7 @@ with DAG(
     wait_for_reconciliation = HttpSensor(
         task_id="wait_for_reconciliation",
         http_conn_id="service_api_default",
-        endpoint="/api/v1/reconciliations/{{ ti.xcom_pull(task_ids='trigger_reconciliation')['request_id'] }}",
+        endpoint="/api/v1/reconciliations/{{ run_id }}",
         response_check=service_request_completed,
         poke_interval=120,
         timeout=int(timedelta(hours=2).total_seconds()),
@@ -64,14 +66,6 @@ with DAG(
         pool="cloud_control_plane",
     )
 
-    @task(task_id="build_audit_record")
-    def build_audit_record(request_id: str) -> dict[str, str]:
-        return {
-            "request_id": request_id,
-            "status": "COMPLETED",
-            "orchestrated_by": "airflow",
-        }
+    build_audit_record = EmptyOperator(task_id="build_audit_record")
 
-    audit_record = build_audit_record(trigger_reconciliation.output["request_id"])
-
-    trigger_reconciliation >> wait_for_reconciliation >> audit_record
+    trigger_reconciliation >> wait_for_reconciliation >> build_audit_record

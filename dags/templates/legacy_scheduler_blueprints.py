@@ -8,8 +8,7 @@ from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.sftp.operators.sftp import SFTPOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
-from airflow.providers.standard.operators.empty import EmptyOperator
-from airflow.sdk import TaskGroup, task
+from airflow.sdk import TaskGroup
 
 try:
     from airflow.sdk.exceptions import AirflowFailException
@@ -107,7 +106,8 @@ class HttpAsyncJobConfig(BaseModel):
     submit_endpoint: str = Field(description="Submission endpoint.")
     status_endpoint_prefix: str = Field(description="Prefix for job-status polling endpoint.")
     payload: dict[str, YamlScalar] = Field(default_factory=dict, description="JSON payload for submission.")
-    response_id_field: str = Field(default="run_id", description="Field extracted from submit response for status polling.")
+    tracking_id: str = Field(default="{{ run_id }}", description="Deterministic identifier used for submission and polling.")
+    tracking_payload_field: str | None = Field(default=None, description="Optional payload field that should receive the tracking identifier.")
     completion_key: str = Field(default="state", description="Response key that contains terminal state.")
     success_values: list[str] = Field(default_factory=lambda: ["COMPLETED", "SUCCEEDED"], description="Values treated as successful completion.")
     method: str = Field(default="POST", description="HTTP method for submission.")
@@ -123,6 +123,10 @@ class HttpAsyncJob(Blueprint[HttpAsyncJobConfig]):
         def is_complete(response) -> bool:
             return response.json().get(config.completion_key) in set(config.success_values)
 
+        payload = dict(config.payload)
+        if config.tracking_payload_field:
+            payload[config.tracking_payload_field] = config.tracking_id
+
         with TaskGroup(group_id=self.step_id) as group:
             submit_request = HttpOperator(
                 task_id="submit_request",
@@ -130,7 +134,7 @@ class HttpAsyncJob(Blueprint[HttpAsyncJobConfig]):
                 endpoint=config.submit_endpoint,
                 method=config.method,
                 headers={"Content-Type": "application/json"},
-                data=json.dumps(config.payload),
+                data=json.dumps(payload),
                 response_filter=lambda response: response.json(),
                 pool=config.pool,
             )
@@ -138,10 +142,7 @@ class HttpAsyncJob(Blueprint[HttpAsyncJobConfig]):
             wait_for_completion = HttpSensor(
                 task_id="wait_for_completion",
                 http_conn_id=config.http_conn_id,
-                endpoint=(
-                    f"{config.status_endpoint_prefix}/"
-                    f"{{{{ ti.xcom_pull(task_ids='{self.step_id}.submit_request')['{config.response_id_field}'] }}}}"
-                ),
+                endpoint=f"{config.status_endpoint_prefix}/{config.tracking_id}",
                 response_check=is_complete,
                 poke_interval=config.poke_interval_seconds,
                 timeout=config.timeout_seconds,
@@ -198,55 +199,32 @@ class ValidatedScriptExecutionConfig(BaseModel):
 
 
 class ValidatedScriptExecution(Blueprint[ValidatedScriptExecutionConfig]):
-    """Validate a requested script/runtime combination and route it to the correct runner."""
+    """Validate a requested script/runtime combination and bind it to one execution target."""
 
     def render(self, config: ValidatedScriptExecutionConfig):
-        bp = self
+        valid_combinations = {
+            ("linux", "shell"): {
+                "ssh_conn_id": config.linux_conn_id,
+                "command": f'bash "{config.script_path}" {config.script_args}',
+            },
+            ("windows", "powershell"): {
+                "ssh_conn_id": config.windows_conn_id,
+                "command": f'powershell.exe -File "{config.script_path}" {config.script_args}',
+            },
+        }
+
+        if (config.target_os, config.script_kind) not in valid_combinations:
+            raise AirflowFailException(
+                f"Invalid combination: target_os={config.target_os}, script_kind={config.script_kind}."
+            )
+
+        runner_config = valid_combinations[(config.target_os, config.script_kind)]
 
         with TaskGroup(group_id=self.step_id) as group:
-            @task(task_id="validate_request")
-            def validate_request() -> None:
-                valid_combinations = {
-                    ("linux", "shell"),
-                    ("windows", "powershell"),
-                }
-                if (config.target_os, config.script_kind) not in valid_combinations:
-                    raise AirflowFailException(
-                        f"Invalid combination: target_os={config.target_os}, script_kind={config.script_kind}."
-                    )
-
-            @task.branch(task_id="route_to_correct_runner")
-            def route_to_correct_runner() -> str:
-                if config.target_os == "windows":
-                    return f"{bp.step_id}.run_windows_powershell"
-                return f"{bp.step_id}.run_linux_shell"
-
-            run_windows_powershell = SSHOperator(
-                task_id="run_windows_powershell",
-                ssh_conn_id=config.windows_conn_id,
-                command=(
-                    f'powershell.exe -File "{config.script_path}" {config.script_args}'
-                ),
+            SSHOperator(
+                task_id="run_validated_script",
+                ssh_conn_id=runner_config["ssh_conn_id"],
+                command=runner_config["command"],
                 pool=config.pool,
             )
-
-            run_linux_shell = SSHOperator(
-                task_id="run_linux_shell",
-                ssh_conn_id=config.linux_conn_id,
-                command=(
-                    f'bash "{config.script_path}" {config.script_args}'
-                ),
-                pool=config.pool,
-            )
-
-            finish = EmptyOperator(
-                task_id="finish",
-                trigger_rule="none_failed_min_one_success",
-            )
-
-            validated = validate_request()
-            selected_runner = route_to_correct_runner()
-
-            validated >> selected_runner
-            selected_runner >> [run_windows_powershell, run_linux_shell] >> finish
         return group

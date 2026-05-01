@@ -3,9 +3,10 @@ from __future__ import annotations
 from datetime import timedelta
 
 import pendulum
-from airflow.sdk import DAG, task
 from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
     "owner": "data-platform",
@@ -55,10 +56,6 @@ with DAG(
         pool="snowflake_queries",
     )
 
-    @task(task_id="emit_orchestration_summary")
-    def emit_orchestration_summary() -> str:
-        return "Databricks processing completed and Snowflake publish was requested."
+    emit_orchestration_summary = EmptyOperator(task_id="emit_orchestration_summary")
 
-    orchestration_summary = emit_orchestration_summary()
-
-    run_databricks_transform >> publish_curated_tables >> orchestration_summary
+    run_databricks_transform >> publish_curated_tables >> emit_orchestration_summary

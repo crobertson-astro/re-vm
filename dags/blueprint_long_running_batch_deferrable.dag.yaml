@@ -15,7 +15,7 @@ steps:
     http_conn_id: batch_service_api
     submit_endpoint: /api/v1/batches/risk/runs
     status_endpoint_prefix: /api/v1/batches/risk/runs
-    response_id_field: run_id
+    tracking_payload_field: client_run_id
     completion_key: state
     success_values: [COMPLETED]
     poke_interval_seconds: 300
