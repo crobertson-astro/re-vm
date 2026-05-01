@@ -1,4 +1,4 @@
-dag_id: blueprint_databricks_snowflake_orchestration
+dag_id: databricks_snowflake_blueprint
 schedule: "15 1 * * 1-5"
 description: "Blueprint example for Databricks plus Snowflake orchestration."
 tags: [legacy-migration, blueprint, databricks, snowflake, cloud]

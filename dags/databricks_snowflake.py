@@ -15,7 +15,7 @@ DEFAULT_ARGS = {
 
 
 with DAG(
-    dag_id="example_databricks_snowflake_orchestration",
+    dag_id="databricks_snowflake",
     description="Example cloud workload orchestration across Databricks and Snowflake.",
     default_args=DEFAULT_ARGS,
     start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),

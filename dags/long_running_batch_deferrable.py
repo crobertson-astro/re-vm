@@ -16,7 +16,7 @@ DEFAULT_ARGS = {
 
 
 with DAG(
-    dag_id="example_long_running_batch_deferrable",
+    dag_id="long_running_batch_deferrable",
     description="Long-running batch pattern using deferrable polling so workers are not occupied for hours.",
     default_args=DEFAULT_ARGS,
     start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),

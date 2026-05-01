@@ -1,4 +1,4 @@
-dag_id: blueprint_hybrid_onprem_cloud
+dag_id: hybrid_onprem_cloud_blueprint
 schedule: "0 3 * * 1-5"
 description: "Blueprint example for on-prem to cloud orchestration with Remote Execution."
 tags: [legacy-migration, blueprint, hybrid, remote-execution, cloud]

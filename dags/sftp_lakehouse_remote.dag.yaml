@@ -1,4 +1,4 @@
-dag_id: blueprint_sftp_lakehouse_remote
+dag_id: sftp_lakehouse_remote_blueprint
 schedule: "0 * * * *"
 description: "Blueprint example for SFTP ingest, lakehouse processing, and Snowflake publish."
 tags: [legacy-migration, blueprint, sftp, snowflake, remote-execution]

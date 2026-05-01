@@ -18,7 +18,7 @@ DEFAULT_ARGS = {
 
 
 with DAG(
-    dag_id="example_hybrid_onprem_cloud",
+    dag_id="hybrid_onprem_cloud",
     description="Example hybrid orchestration across on-prem scripts, cloud APIs, Databricks, and Snowflake.",
     default_args=DEFAULT_ARGS,
     start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),

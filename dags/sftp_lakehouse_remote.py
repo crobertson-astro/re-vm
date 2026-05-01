@@ -19,7 +19,7 @@ REMOTE_FILEPATH = "/outbound/vendor_positions_{{ data_interval_start | ds_nodash
 
 
 with DAG(
-    dag_id="example_sftp_lakehouse_remote",
+    dag_id="sftp_lakehouse_remote",
     description="Example legacy-scheduler migration pattern for SFTP ingest, lakehouse processing, and Snowflake publish.",
     default_args=DEFAULT_ARGS,
     start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),

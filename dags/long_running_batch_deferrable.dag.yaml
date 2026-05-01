@@ -1,4 +1,4 @@
-dag_id: blueprint_long_running_batch_deferrable
+dag_id: long_running_batch_deferrable_blueprint
 schedule: "0 22 * * 5"
 description: "Blueprint example for a long-running API-managed batch with deferrable polling."
 tags: [legacy-migration, blueprint, long-running, deferrable, remote-execution]

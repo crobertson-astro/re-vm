@@ -16,7 +16,7 @@ DEFAULT_ARGS = {
 
 
 with DAG(
-    dag_id="example_web_service_jobs",
+    dag_id="web_service_jobs",
     description="Example orchestration of vendor or internal web-service jobs from Airflow.",
     default_args=DEFAULT_ARGS,
     start_date=pendulum.datetime(2024, 1, 1, tz="UTC"),
