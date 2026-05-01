@@ -8,6 +8,7 @@ from airflow.providers.http.sensors.http import HttpSensor
 from airflow.providers.sftp.operators.sftp import SFTPOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.providers.standard.operators.bash import BashOperator
 from airflow.sdk import TaskGroup
 
 try:
@@ -18,6 +19,33 @@ from blueprint import BaseModel, Blueprint, Field
 from pydantic import ConfigDict
 
 YamlScalar = str | int | float | bool | None
+
+
+class LocalBashConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    bash_command: str = Field(description="Bash command to execute locally.")
+    env: dict[str, YamlScalar] = Field(default_factory=dict, description="Optional environment variables.")
+    cwd: str | None = Field(default=None, description="Optional working directory for the command.")
+    append_env: bool = Field(default=False, description="Append env values to the worker environment.")
+    pool: str | None = Field(default=None, description="Optional pool for the bash task.")
+
+
+class LocalBash(Blueprint[LocalBashConfig]):
+    """Run a local Bash command with BashOperator."""
+
+    def render(self, config: LocalBashConfig):
+        with TaskGroup(group_id=self.step_id) as group:
+            BashOperator(
+                task_id="run",
+                bash_command=self.param("bash_command"),
+                params={"bash_command": config.bash_command},
+                env=config.env,
+                cwd=config.cwd,
+                append_env=config.append_env,
+                pool=config.pool,
+            )
+        return group
 
 
 class SftpGetConfig(BaseModel):

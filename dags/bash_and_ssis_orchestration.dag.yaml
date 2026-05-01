@@ -1,0 +1,26 @@
+dag_id: bash_and_ssis_orchestration_blueprint
+schedule: "30 1 * * 1-5"
+description: "Blueprint example that stages a local control artifact with BashOperator and triggers an SSIS job on a Windows runner."
+tags: [legacy-migration, blueprint, bash, ssis, remote-execution]
+owner: data-platform
+retries: 2
+retry_delay_minutes: 5
+start_date: "2024-01-01"
+catchup: false
+max_active_runs: 1
+
+steps:
+  create_trigger_marker:
+    blueprint: local_bash
+    bash_command: |
+      set -euo pipefail
+      mkdir -p /tmp/legacy_control
+      printf '%s\n' '{{ context.ds }}|{{ context.run_id }}|daily_finance_load' > /tmp/legacy_control/ssis_trigger_{{ context.ds_nodash }}.txt
+
+  trigger_ssis_job:
+    blueprint: validated_script_execution
+    depends_on: [create_trigger_marker]
+    target_os: windows
+    script_kind: powershell
+    script_path: C:/jobs/trigger_ssis_job.ps1
+    script_args: '-JobName "daily_finance_load" -BusinessDate "{{ context.ds }}" -RequestId "{{ context.run_id }}"'
