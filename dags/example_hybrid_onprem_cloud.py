@@ -8,7 +8,6 @@ from airflow.providers.databricks.operators.databricks import DatabricksSubmitRu
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
-from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
@@ -16,10 +15,6 @@ DEFAULT_ARGS = {
     "retries": 2,
     "retry_delay": timedelta(minutes=5),
 }
-
-
-def parse_json_response(response):
-    return response.json()
 
 
 with DAG(
@@ -57,7 +52,7 @@ with DAG(
                 "manifest_id": "{{ run_id }}",
             }
         ),
-        response_filter=parse_json_response,
+        response_filter=lambda response: response.json(),
         pool="cloud_control_plane",
     )
 
@@ -88,6 +83,4 @@ with DAG(
         pool="snowflake_queries",
     )
 
-    emit_hybrid_summary = EmptyOperator(task_id="emit_hybrid_summary")
-
-    export_from_onprem >> register_manifest >> run_cloud_enrichment >> publish_to_snowflake >> emit_hybrid_summary
+    export_from_onprem >> register_manifest >> run_cloud_enrichment >> publish_to_snowflake

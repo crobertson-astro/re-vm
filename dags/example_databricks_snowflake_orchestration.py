@@ -5,7 +5,6 @@ from datetime import timedelta
 import pendulum
 from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
-from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
@@ -56,6 +55,4 @@ with DAG(
         pool="snowflake_queries",
     )
 
-    emit_orchestration_summary = EmptyOperator(task_id="emit_orchestration_summary")
-
-    run_databricks_transform >> publish_curated_tables >> emit_orchestration_summary
+    run_databricks_transform >> publish_curated_tables

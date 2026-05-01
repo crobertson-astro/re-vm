@@ -6,7 +6,6 @@ from datetime import timedelta
 import pendulum
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
-from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
@@ -14,14 +13,6 @@ DEFAULT_ARGS = {
     "retries": 2,
     "retry_delay": timedelta(minutes=10),
 }
-
-
-def parse_json_response(response):
-    return response.json()
-
-
-def batch_run_completed(response) -> bool:
-    return response.json().get("state") == "COMPLETED"
 
 
 with DAG(
@@ -57,7 +48,7 @@ with DAG(
                 "client_run_id": "{{ run_id }}",
             }
         ),
-        response_filter=parse_json_response,
+        response_filter=lambda response: response.json(),
         pool="cloud_control_plane",
     )
 
@@ -65,13 +56,11 @@ with DAG(
         task_id="wait_for_batch_completion",
         http_conn_id="batch_service_api",
         endpoint="/api/v1/batches/risk/runs/{{ run_id }}",
-        response_check=batch_run_completed,
+        response_check=lambda response: response.json().get("state") == "COMPLETED",
         poke_interval=300,
         timeout=int(timedelta(hours=10).total_seconds()),
         deferrable=True,
         pool="cloud_control_plane",
     )
 
-    publish_batch_summary = EmptyOperator(task_id="publish_batch_summary")
-
-    submit_batch >> wait_for_batch_completion >> publish_batch_summary
+    submit_batch >> wait_for_batch_completion

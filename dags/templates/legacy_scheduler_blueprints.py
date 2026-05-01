@@ -120,9 +120,6 @@ class HttpAsyncJob(Blueprint[HttpAsyncJobConfig]):
     """Submit an API-managed job and wait for completion with a deferrable sensor."""
 
     def render(self, config: HttpAsyncJobConfig):
-        def is_complete(response) -> bool:
-            return response.json().get(config.completion_key) in set(config.success_values)
-
         payload = dict(config.payload)
         if config.tracking_payload_field:
             payload[config.tracking_payload_field] = config.tracking_id
@@ -143,7 +140,7 @@ class HttpAsyncJob(Blueprint[HttpAsyncJobConfig]):
                 task_id="wait_for_completion",
                 http_conn_id=config.http_conn_id,
                 endpoint=f"{config.status_endpoint_prefix}/{config.tracking_id}",
-                response_check=is_complete,
+                response_check=lambda response: response.json().get(config.completion_key) in set(config.success_values),
                 poke_interval=config.poke_interval_seconds,
                 timeout=config.timeout_seconds,
                 deferrable=True,

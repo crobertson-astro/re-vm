@@ -6,7 +6,6 @@ from datetime import timedelta
 import pendulum
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
-from airflow.providers.standard.operators.empty import EmptyOperator
 from airflow.sdk import DAG
 
 DEFAULT_ARGS = {
@@ -14,14 +13,6 @@ DEFAULT_ARGS = {
     "retries": 2,
     "retry_delay": timedelta(minutes=5),
 }
-
-
-def parse_json_response(response):
-    return response.json()
-
-
-def service_request_completed(response) -> bool:
-    return response.json().get("status") in {"COMPLETED", "SUCCEEDED"}
 
 
 with DAG(
@@ -51,7 +42,7 @@ with DAG(
                 "request_id": "{{ run_id }}",
             }
         ),
-        response_filter=parse_json_response,
+        response_filter=lambda response: response.json(),
         pool="cloud_control_plane",
     )
 
@@ -59,13 +50,11 @@ with DAG(
         task_id="wait_for_reconciliation",
         http_conn_id="service_api_default",
         endpoint="/api/v1/reconciliations/{{ run_id }}",
-        response_check=service_request_completed,
+        response_check=lambda response: response.json().get("status") in {"COMPLETED", "SUCCEEDED"},
         poke_interval=120,
         timeout=int(timedelta(hours=2).total_seconds()),
         deferrable=True,
         pool="cloud_control_plane",
     )
 
-    build_audit_record = EmptyOperator(task_id="build_audit_record")
-
-    trigger_reconciliation >> wait_for_reconciliation >> build_audit_record
+    trigger_reconciliation >> wait_for_reconciliation
