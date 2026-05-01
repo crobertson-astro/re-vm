@@ -1,4 +1,5 @@
-# Providers used by the legacy scheduler migration example DAGs.
+# Providers and libraries used by the legacy scheduler migration example DAGs.
+airflow-blueprint>=0.2.0
 apache-airflow-providers-databricks
 apache-airflow-providers-http
 apache-airflow-providers-sftp

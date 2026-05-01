@@ -3,8 +3,7 @@ from __future__ import annotations
 from datetime import timedelta
 
 import pendulum
-from airflow import DAG
-from airflow.decorators import task
+from airflow.sdk import DAG, task
 from airflow.providers.sftp.operators.sftp import SFTPOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
 

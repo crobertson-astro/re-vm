@@ -1,0 +1,120 @@
+2026-04-30T23:41:21.969966Z [warning  ] The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=5
+2026-04-30T23:41:21.979384Z [warning  ] airflow.exceptions.AirflowFailException is deprecated and will be removed in a future version. Use airflow.sdk.exceptions.AirflowFailException instead. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=6
+2026-04-30T23:41:21.979530Z [warning  ] The `airflow.operators.empty.EmptyOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.empty.EmptyOperator'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=7
+2026-04-30T23:41:22.116968Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:22.117059Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:22.117096Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:22.117126Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:22.117152Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:22.117176Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:22.219285Z [warning  ] The `airflow.utils.task_group.TaskGroup` attribute is deprecated. Please use `'airflow.sdk.TaskGroup'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=14
+{                                                                               
+  "additionalProperties": false,                                                
+  "properties": {                                                               
+    "http_conn_id": {                                                           
+      "description": "HTTP connection ID.",                                     
+      "title": "Http Conn Id",                                                  
+      "type": "string"                                                          
+    },                                                                          
+    "submit_endpoint": {                                                        
+      "description": "Submission endpoint.",                                    
+      "title": "Submit Endpoint",                                               
+      "type": "string"                                                          
+    },                                                                          
+    "status_endpoint_prefix": {                                                 
+      "description": "Prefix for job-status polling endpoint.",                 
+      "title": "Status Endpoint Prefix",                                        
+      "type": "string"                                                          
+    },                                                                          
+    "payload": {                                                                
+      "additionalProperties": {                                                 
+        "anyOf": [                                                              
+          {                                                                     
+            "type": "string"                                                    
+          },                                                                    
+          {                                                                     
+            "type": "integer"                                                   
+          },                                                                    
+          {                                                                     
+            "type": "number"                                                    
+          },                                                                    
+          {                                                                     
+            "type": "boolean"                                                   
+          },                                                                    
+          {                                                                     
+            "type": "null"                                                      
+          }                                                                     
+        ]                                                                       
+      },                                                                        
+      "description": "JSON payload for submission.",                            
+      "title": "Payload",                                                       
+      "type": "object"                                                          
+    },                                                                          
+    "response_id_field": {                                                      
+      "default": "run_id",                                                      
+      "description": "Field extracted from submit response for status polling.",
+      "title": "Response Id Field",                                             
+      "type": "string"                                                          
+    },                                                                          
+    "completion_key": {                                                         
+      "default": "state",                                                       
+      "description": "Response key that contains terminal state.",              
+      "title": "Completion Key",                                                
+      "type": "string"                                                          
+    },                                                                          
+    "success_values": {                                                         
+      "description": "Values treated as successful completion.",                
+      "items": {                                                                
+        "type": "string"                                                        
+      },                                                                        
+      "title": "Success Values",                                                
+      "type": "array"                                                           
+    },                                                                          
+    "method": {                                                                 
+      "default": "POST",                                                        
+      "description": "HTTP method for submission.",                             
+      "title": "Method",                                                        
+      "type": "string"                                                          
+    },                                                                          
+    "poke_interval_seconds": {                                                  
+      "default": 300,                                                           
+      "description": "Polling interval in seconds.",                            
+      "minimum": 5,                                                             
+      "title": "Poke Interval Seconds",                                         
+      "type": "integer"                                                         
+    },                                                                          
+    "timeout_seconds": {                                                        
+      "default": 36000,                                                         
+      "description": "Polling timeout in seconds.",                             
+      "minimum": 60,                                                            
+      "title": "Timeout Seconds",                                               
+      "type": "integer"                                                         
+    },                                                                          
+    "pool": {                                                                   
+      "default": "cloud_control_plane",                                         
+      "description": "Pool for API orchestration tasks.",                       
+      "title": "Pool",                                                          
+      "type": "string"                                                          
+    },                                                                          
+    "blueprint": {                                                              
+      "type": "string",                                                         
+      "const": "http_async_job",                                                
+      "description": "The blueprint template to use"                            
+    },                                                                          
+    "version": {                                                                
+      "type": "integer",                                                        
+      "const": 1,                                                               
+      "description": "The blueprint version"                                    
+    }                                                                           
+  },                                                                            
+  "required": [                                                                 
+    "blueprint",                                                                
+    "version",                                                                  
+    "http_conn_id",                                                             
+    "submit_endpoint",                                                          
+    "status_endpoint_prefix"                                                    
+  ],                                                                            
+  "title": "http_async_job",                                                    
+  "type": "object",                                                             
+  "$schema": "http://json-schema.org/draft-07/schema#"                          
+}                                                                               

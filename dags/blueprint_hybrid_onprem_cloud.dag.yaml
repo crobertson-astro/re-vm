@@ -1,0 +1,35 @@
+dag_id: blueprint_hybrid_onprem_cloud
+schedule: "0 3 * * 1-5"
+description: "Blueprint example for on-prem to cloud orchestration with Remote Execution."
+tags: [legacy-migration, blueprint, hybrid, remote-execution, cloud]
+owner: data-platform
+retries: 2
+retry_delay_minutes: 5
+start_date: "2024-01-01"
+catchup: false
+max_active_runs: 1
+
+steps:
+  export_from_onprem:
+    blueprint: remote_command
+    ssh_conn_id: linux_remote_executor
+    command: "bash /opt/jobs/export_positions.sh '{{ context.ds }}'"
+
+  run_cloud_enrichment:
+    blueprint: databricks_notebook_run
+    depends_on: [export_from_onprem]
+    databricks_conn_id: databricks_default
+    run_name: "hybrid_positions_{{ context.ds_nodash }}"
+    existing_cluster_id: REPLACE_WITH_DATABRICKS_CLUSTER_ID
+    notebook_path: /Shared/analytics/hybrid_positions_enrichment
+    base_parameters:
+      business_date: "{{ context.ds }}"
+      source_system: onprem-linux
+
+  publish_to_snowflake:
+    blueprint: snowflake_sql
+    depends_on: [run_cloud_enrichment]
+    sql: "CALL ANALYTICS.GOLD.SP_LOAD_HYBRID_POSITIONS('{{ context.ds }}')"
+    warehouse: TRANSFORMING
+    database: ANALYTICS
+    schema: GOLD

@@ -3,12 +3,14 @@ from __future__ import annotations
 from datetime import timedelta
 
 import pendulum
-from airflow import DAG
-from airflow.decorators import task
-from airflow.exceptions import AirflowFailException
-from airflow.models.param import Param
-from airflow.operators.empty import EmptyOperator
 from airflow.providers.ssh.operators.ssh import SSHOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.sdk import DAG, Param, task
+
+try:
+    from airflow.sdk.exceptions import AirflowFailException
+except (ImportError, AttributeError):
+    from airflow.exceptions import AirflowFailException
 
 DEFAULT_ARGS = {
     "owner": "data-platform",

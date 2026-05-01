@@ -1,0 +1,74 @@
+2026-04-30T23:41:25.700944Z [warning  ] The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=5
+2026-04-30T23:41:25.710253Z [warning  ] airflow.exceptions.AirflowFailException is deprecated and will be removed in a future version. Use airflow.sdk.exceptions.AirflowFailException instead. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=6
+2026-04-30T23:41:25.710401Z [warning  ] The `airflow.operators.empty.EmptyOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.empty.EmptyOperator'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=7
+2026-04-30T23:41:25.846489Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:25.846597Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:25.846643Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:25.846682Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:25.846716Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:25.846744Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:25.949787Z [warning  ] The `airflow.utils.task_group.TaskGroup` attribute is deprecated. Please use `'airflow.sdk.TaskGroup'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=14
+{                                                                               
+  "additionalProperties": false,                                                
+  "properties": {                                                               
+    "target_os": {                                                              
+      "description": "Target operating system.",                                
+      "title": "Target Os",                                                     
+      "type": "string"                                                          
+    },                                                                          
+    "script_kind": {                                                            
+      "description": "Script type, such as shell or powershell.",               
+      "title": "Script Kind",                                                   
+      "type": "string"                                                          
+    },                                                                          
+    "script_path": {                                                            
+      "description": "Path to the script on the remote host.",                  
+      "title": "Script Path",                                                   
+      "type": "string"                                                          
+    },                                                                          
+    "script_args": {                                                            
+      "default": "",                                                            
+      "description": "Arguments passed to the script.",                         
+      "title": "Script Args",                                                   
+      "type": "string"                                                          
+    },                                                                          
+    "windows_conn_id": {                                                        
+      "default": "windows_remote_executor",                                     
+      "description": "Connection for Windows execution.",                       
+      "title": "Windows Conn Id",                                               
+      "type": "string"                                                          
+    },                                                                          
+    "linux_conn_id": {                                                          
+      "default": "linux_remote_executor",                                       
+      "description": "Connection for Linux execution.",                         
+      "title": "Linux Conn Id",                                                 
+      "type": "string"                                                          
+    },                                                                          
+    "pool": {                                                                   
+      "default": "remote_execution",                                            
+      "description": "Pool for remote-executed tasks.",                         
+      "title": "Pool",                                                          
+      "type": "string"                                                          
+    },                                                                          
+    "blueprint": {                                                              
+      "type": "string",                                                         
+      "const": "validated_script_execution",                                    
+      "description": "The blueprint template to use"                            
+    },                                                                          
+    "version": {                                                                
+      "type": "integer",                                                        
+      "const": 1,                                                               
+      "description": "The blueprint version"                                    
+    }                                                                           
+  },                                                                            
+  "required": [                                                                 
+    "blueprint",                                                                
+    "version",                                                                  
+    "target_os",                                                                
+    "script_kind",                                                              
+    "script_path"                                                               
+  ],                                                                            
+  "title": "validated_script_execution",                                        
+  "type": "object",                                                             
+  "$schema": "http://json-schema.org/draft-07/schema#"                          
+}                                                                               

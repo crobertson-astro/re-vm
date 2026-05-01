@@ -1,0 +1,37 @@
+dag_id: blueprint_sftp_lakehouse_remote
+schedule: "0 * * * *"
+description: "Blueprint example for SFTP ingest, lakehouse processing, and Snowflake publish."
+tags: [legacy-migration, blueprint, sftp, snowflake, remote-execution]
+owner: data-platform
+retries: 2
+retry_delay_minutes: 5
+start_date: "2024-01-01"
+catchup: false
+max_active_runs: 1
+
+steps:
+  download_vendor_file:
+    blueprint: sftp_get
+    ssh_conn_id: vendor_sftp_default
+    remote_filepath: "/outbound/vendor_positions_{{ context.ds_nodash }}.csv"
+    local_filepath: "/tmp/vendor_positions_{{ context.ds_nodash }}.csv"
+
+  stage_to_bronze:
+    blueprint: remote_command
+    depends_on: [download_vendor_file]
+    ssh_conn_id: linux_remote_executor
+    command: "bash /opt/jobs/stage_to_bronze.sh '{{ context.ds }}'"
+
+  cleanse_to_silver:
+    blueprint: remote_command
+    depends_on: [stage_to_bronze]
+    ssh_conn_id: linux_remote_executor
+    command: "bash /opt/jobs/cleanse_to_silver.sh '{{ context.ds }}'"
+
+  publish_to_snowflake:
+    blueprint: snowflake_sql
+    depends_on: [cleanse_to_silver]
+    sql: "CALL ANALYTICS.GOLD.SP_PUBLISH_VENDOR_POSITIONS('{{ context.ds_nodash }}')"
+    warehouse: TRANSFORMING
+    database: ANALYTICS
+    schema: GOLD

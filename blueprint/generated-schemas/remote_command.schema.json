@@ -1,0 +1,50 @@
+2026-04-30T23:41:22.899740Z [warning  ] The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=5
+2026-04-30T23:41:22.908889Z [warning  ] airflow.exceptions.AirflowFailException is deprecated and will be removed in a future version. Use airflow.sdk.exceptions.AirflowFailException instead. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=6
+2026-04-30T23:41:22.909030Z [warning  ] The `airflow.operators.empty.EmptyOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.empty.EmptyOperator'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=7
+2026-04-30T23:41:23.047708Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.047799Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.047835Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.047864Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.047889Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.047913Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.152980Z [warning  ] The `airflow.utils.task_group.TaskGroup` attribute is deprecated. Please use `'airflow.sdk.TaskGroup'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=14
+{                                                                               
+  "additionalProperties": false,                                                
+  "properties": {                                                               
+    "ssh_conn_id": {                                                            
+      "description": "SSH connection ID for the remote runner.",                
+      "title": "Ssh Conn Id",                                                   
+      "type": "string"                                                          
+    },                                                                          
+    "command": {                                                                
+      "description": "Command to execute remotely.",                            
+      "title": "Command",                                                       
+      "type": "string"                                                          
+    },                                                                          
+    "pool": {                                                                   
+      "default": "remote_execution",                                            
+      "description": "Pool for remote-executed tasks.",                         
+      "title": "Pool",                                                          
+      "type": "string"                                                          
+    },                                                                          
+    "blueprint": {                                                              
+      "type": "string",                                                         
+      "const": "remote_command",                                                
+      "description": "The blueprint template to use"                            
+    },                                                                          
+    "version": {                                                                
+      "type": "integer",                                                        
+      "const": 1,                                                               
+      "description": "The blueprint version"                                    
+    }                                                                           
+  },                                                                            
+  "required": [                                                                 
+    "blueprint",                                                                
+    "version",                                                                  
+    "ssh_conn_id",                                                              
+    "command"                                                                   
+  ],                                                                            
+  "title": "remote_command",                                                    
+  "type": "object",                                                             
+  "$schema": "http://json-schema.org/draft-07/schema#"                          
+}                                                                               

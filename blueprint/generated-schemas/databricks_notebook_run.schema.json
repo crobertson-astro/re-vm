@@ -1,0 +1,86 @@
+2026-04-30T23:41:21.009444Z [warning  ] The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=5
+2026-04-30T23:41:21.018831Z [warning  ] airflow.exceptions.AirflowFailException is deprecated and will be removed in a future version. Use airflow.sdk.exceptions.AirflowFailException instead. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=6
+2026-04-30T23:41:21.018974Z [warning  ] The `airflow.operators.empty.EmptyOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.empty.EmptyOperator'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=7
+2026-04-30T23:41:21.162450Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:21.162536Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:21.162571Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:21.162598Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:21.162623Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:21.162645Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:21.268171Z [warning  ] The `airflow.utils.task_group.TaskGroup` attribute is deprecated. Please use `'airflow.sdk.TaskGroup'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=14
+{                                                                               
+  "additionalProperties": false,                                                
+  "properties": {                                                               
+    "databricks_conn_id": {                                                     
+      "default": "databricks_default",                                          
+      "description": "Databricks connection ID.",                               
+      "title": "Databricks Conn Id",                                            
+      "type": "string"                                                          
+    },                                                                          
+    "run_name": {                                                               
+      "description": "Databricks run name.",                                    
+      "title": "Run Name",                                                      
+      "type": "string"                                                          
+    },                                                                          
+    "existing_cluster_id": {                                                    
+      "description": "Existing cluster ID.",                                    
+      "title": "Existing Cluster Id",                                           
+      "type": "string"                                                          
+    },                                                                          
+    "notebook_path": {                                                          
+      "description": "Notebook path.",                                          
+      "title": "Notebook Path",                                                 
+      "type": "string"                                                          
+    },                                                                          
+    "base_parameters": {                                                        
+      "additionalProperties": {                                                 
+        "anyOf": [                                                              
+          {                                                                     
+            "type": "string"                                                    
+          },                                                                    
+          {                                                                     
+            "type": "integer"                                                   
+          },                                                                    
+          {                                                                     
+            "type": "number"                                                    
+          },                                                                    
+          {                                                                     
+            "type": "boolean"                                                   
+          },                                                                    
+          {                                                                     
+            "type": "null"                                                      
+          }                                                                     
+        ]                                                                       
+      },                                                                        
+      "description": "Notebook parameters.",                                    
+      "title": "Base Parameters",                                               
+      "type": "object"                                                          
+    },                                                                          
+    "pool": {                                                                   
+      "default": "databricks_jobs",                                             
+      "description": "Pool for Databricks job submission and monitoring.",      
+      "title": "Pool",                                                          
+      "type": "string"                                                          
+    },                                                                          
+    "blueprint": {                                                              
+      "type": "string",                                                         
+      "const": "databricks_notebook_run",                                       
+      "description": "The blueprint template to use"                            
+    },                                                                          
+    "version": {                                                                
+      "type": "integer",                                                        
+      "const": 1,                                                               
+      "description": "The blueprint version"                                    
+    }                                                                           
+  },                                                                            
+  "required": [                                                                 
+    "blueprint",                                                                
+    "version",                                                                  
+    "run_name",                                                                 
+    "existing_cluster_id",                                                      
+    "notebook_path"                                                             
+  ],                                                                            
+  "title": "databricks_notebook_run",                                           
+  "type": "object",                                                             
+  "$schema": "http://json-schema.org/draft-07/schema#"                          
+}                                                                               

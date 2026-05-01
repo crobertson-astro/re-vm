@@ -1,0 +1,29 @@
+dag_id: blueprint_databricks_snowflake_orchestration
+schedule: "15 1 * * 1-5"
+description: "Blueprint example for Databricks plus Snowflake orchestration."
+tags: [legacy-migration, blueprint, databricks, snowflake, cloud]
+owner: data-platform
+retries: 2
+retry_delay_minutes: 5
+start_date: "2024-01-01"
+catchup: false
+max_active_runs: 1
+
+steps:
+  run_databricks_transform:
+    blueprint: databricks_notebook_run
+    databricks_conn_id: databricks_default
+    run_name: "positions_{{ context.ds_nodash }}"
+    existing_cluster_id: REPLACE_WITH_DATABRICKS_CLUSTER_ID
+    notebook_path: /Shared/analytics/positions_bronze_to_silver
+    base_parameters:
+      business_date: "{{ context.ds }}"
+      dataset: vendor_positions
+
+  publish_curated_tables:
+    blueprint: snowflake_sql
+    depends_on: [run_databricks_transform]
+    sql: "CALL ANALYTICS.GOLD.SP_PUBLISH_POSITIONS('{{ context.ds }}')"
+    warehouse: TRANSFORMING
+    database: ANALYTICS
+    schema: GOLD

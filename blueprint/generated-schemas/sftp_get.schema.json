@@ -1,0 +1,62 @@
+2026-04-30T23:41:23.814427Z [warning  ] The `airflow.decorators.task` attribute is deprecated. Please use `'airflow.sdk.task'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=5
+2026-04-30T23:41:23.824004Z [warning  ] airflow.exceptions.AirflowFailException is deprecated and will be removed in a future version. Use airflow.sdk.exceptions.AirflowFailException instead. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=6
+2026-04-30T23:41:23.824160Z [warning  ] The `airflow.operators.empty.EmptyOperator` attribute is deprecated. Please use `'airflow.providers.standard.operators.empty.EmptyOperator'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=7
+2026-04-30T23:41:23.962188Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.962275Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.962311Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.962339Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.962365Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:23.962388Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
+2026-04-30T23:41:24.068851Z [warning  ] The `airflow.utils.task_group.TaskGroup` attribute is deprecated. Please use `'airflow.sdk.TaskGroup'`. [py.warnings] category=DeprecatedImportWarning filename=/Users/chase.robertson/demos/re-vm/dags/templates/legacy_scheduler_blueprints.py lineno=14
+{                                                                               
+  "additionalProperties": false,                                                
+  "properties": {                                                               
+    "ssh_conn_id": {                                                            
+      "default": "vendor_sftp_default",                                         
+      "description": "SFTP connection ID.",                                     
+      "title": "Ssh Conn Id",                                                   
+      "type": "string"                                                          
+    },                                                                          
+    "remote_filepath": {                                                        
+      "description": "Source path on the SFTP server.",                         
+      "title": "Remote Filepath",                                               
+      "type": "string"                                                          
+    },                                                                          
+    "local_filepath": {                                                         
+      "description": "Local destination path.",                                 
+      "title": "Local Filepath",                                                
+      "type": "string"                                                          
+    },                                                                          
+    "create_intermediate_dirs": {                                               
+      "default": true,                                                          
+      "description": "Create local directories if needed.",                     
+      "title": "Create Intermediate Dirs",                                      
+      "type": "boolean"                                                         
+    },                                                                          
+    "pool": {                                                                   
+      "default": "remote_execution",                                            
+      "description": "Pool for remote-executed tasks.",                         
+      "title": "Pool",                                                          
+      "type": "string"                                                          
+    },                                                                          
+    "blueprint": {                                                              
+      "type": "string",                                                         
+      "const": "sftp_get",                                                      
+      "description": "The blueprint template to use"                            
+    },                                                                          
+    "version": {                                                                
+      "type": "integer",                                                        
+      "const": 1,                                                               
+      "description": "The blueprint version"                                    
+    }                                                                           
+  },                                                                            
+  "required": [                                                                 
+    "blueprint",                                                                
+    "version",                                                                  
+    "remote_filepath",                                                          
+    "local_filepath"                                                            
+  ],                                                                            
+  "title": "sftp_get",                                                          
+  "type": "object",                                                             
+  "$schema": "http://json-schema.org/draft-07/schema#"                          
+}                                                                               

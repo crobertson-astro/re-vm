@@ -4,8 +4,7 @@ import json
 from datetime import timedelta
 
 import pendulum
-from airflow import DAG
-from airflow.decorators import task
+from airflow.sdk import DAG, task
 from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
 from airflow.providers.http.operators.http import HttpOperator
 from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
