@@ -1,0 +1,60 @@
+dag_id: standalone_windows_no_connections_blueprint
+schedule: null
+description: "Blueprint replica of the standalone no-connection Windows demo with Bash, an SFTP-style local transfer, and PowerShell."
+tags: [demo, blueprint, windows, bash, sftp, powershell, no-connections]
+owner: data-platform
+retries: 2
+retry_delay_minutes: 5
+start_date: "2024-01-01"
+catchup: false
+max_active_runs: 1
+
+steps:
+  bash_runtime_probe:
+    blueprint: local_bash
+    bash_command: |
+      set -euo pipefail
+
+      output_dir="./tmp/standalone-windows-demo/{{ context.run_id | replace(':', '_') }}/bash"
+      output_file="${output_dir}/runtime.txt"
+      windows_pwd="$(pwd -W 2>/dev/null || pwd)"
+
+      mkdir -p "${output_dir}"
+
+      cat <<EOF > "${output_file}"
+      timestamp=$(date -Iseconds)
+      hostname=$(hostname)
+      user=$(whoami)
+      pwd=$(pwd)
+      windows_pwd=${windows_pwd}
+      shell=${SHELL:-unset}
+      dag_id={{ context.dag_id }}
+      run_id={{ context.run_id }}
+      logical_date={{ context.logical_date }}
+      EOF
+
+      echo "Created ${output_file}"
+      cat "${output_file}"
+
+  simulate_sftp_download:
+    blueprint: local_filesystem_sftp
+    depends_on: [bash_runtime_probe]
+    remote_dir: "./tmp/standalone-windows-demo/{{ context.run_id | replace(':', '_') }}/fake-sftp-remote"
+    local_dir: "./tmp/standalone-windows-demo/{{ context.run_id | replace(':', '_') }}/landing"
+    filename: "vendor_positions_{{ context.ds_nodash }}.csv"
+    file_contents: |
+      account_id,position
+      A100,42
+      B200,17
+      C300,9
+
+  powershell_windows_probe:
+    blueprint: local_powershell
+    depends_on: [simulate_sftp_download]
+    input_filepath: "./tmp/standalone-windows-demo/{{ context.run_id | replace(':', '_') }}/windows-input/vendor_positions_{{ context.ds_nodash }}.csv"
+    report_filepath: "./tmp/standalone-windows-demo/{{ context.run_id | replace(':', '_') }}/reports/powershell_report.txt"
+    seed_contents: |
+      account_id,position
+      A100,42
+      B200,17
+      C300,9

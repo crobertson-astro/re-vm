@@ -1,0 +1,40 @@
+{                                                                               
+  "additionalProperties": false,                                                
+  "properties": {                                                               
+    "input_filepath": {                                                         
+      "description": "Path inspected from PowerShell.",                         
+      "title": "Input Filepath",                                                
+      "type": "string"                                                          
+    },                                                                          
+    "report_filepath": {                                                        
+      "description": "Path where the PowerShell report is written.",            
+      "title": "Report Filepath",                                               
+      "type": "string"                                                          
+    },                                                                          
+    "seed_contents": {                                                          
+      "description": "Fallback file contents used when the input file does not a
+      "title": "Seed Contents",                                                 
+      "type": "string"                                                          
+    },                                                                          
+    "blueprint": {                                                              
+      "type": "string",                                                         
+      "const": "local_powershell",                                              
+      "description": "The blueprint template to use"                            
+    },                                                                          
+    "version": {                                                                
+      "type": "integer",                                                        
+      "const": 1,                                                               
+      "description": "The blueprint version"                                    
+    }                                                                           
+  },                                                                            
+  "required": [                                                                 
+    "blueprint",                                                                
+    "version",                                                                  
+    "input_filepath",                                                           
+    "report_filepath",                                                          
+    "seed_contents"                                                             
+  ],                                                                            
+  "title": "local_powershell",                                                  
+  "type": "object",                                                             
+  "$schema": "http://json-schema.org/draft-07/schema#"                          
+}                                                                               

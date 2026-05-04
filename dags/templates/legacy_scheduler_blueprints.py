@@ -1,15 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
 
-from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
-from airflow.providers.http.operators.http import HttpOperator
-from airflow.providers.http.sensors.http import HttpSensor
-from airflow.providers.sftp.operators.sftp import SFTPOperator
-from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
-from airflow.providers.ssh.operators.ssh import SSHOperator
-from airflow.providers.standard.operators.bash import BashOperator
-from airflow.sdk import TaskGroup
+from airflow.sdk import TaskGroup, get_current_context, task
 
 try:
     from airflow.sdk.exceptions import AirflowFailException
@@ -32,19 +29,181 @@ class LocalBashConfig(BaseModel):
 
 
 class LocalBash(Blueprint[LocalBashConfig]):
-    """Run a local Bash command with BashOperator."""
+    """Run a local Bash command with TaskFlow's bash decorator."""
 
     def render(self, config: LocalBashConfig):
         with TaskGroup(group_id=self.step_id) as group:
-            BashOperator(
+            @task.bash(
                 task_id="run",
-                bash_command=self.param("bash_command"),
-                params={"bash_command": config.bash_command},
                 env=config.env,
                 cwd=config.cwd,
                 append_env=config.append_env,
                 pool=config.pool,
+                params={"bash_command": config.bash_command},
             )
+            def run() -> str:
+                return self.param("bash_command")
+
+            run()
+        return group
+
+
+class LocalFilesystemSftpConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    remote_dir: str = Field(description="Directory used as the simulated SFTP source.")
+    local_dir: str = Field(description="Directory used as the landing destination.")
+    filename: str = Field(description="Filename copied from the simulated remote directory.")
+    file_contents: str = Field(description="Contents written into the simulated remote file before transfer.")
+    overwrite: bool = Field(default=True, description="Overwrite the simulated remote file before copying it.")
+
+
+class LocalFilesystemSftp(Blueprint[LocalFilesystemSftpConfig]):
+    """Simulate an SFTP-style file download without requiring an Airflow connection."""
+
+    name = "local_filesystem_sftp"
+
+    @staticmethod
+    def _transfer(remote_dir: str, local_dir: str, filename: str, file_contents: str, overwrite: bool = True) -> None:
+        remote_path = Path(remote_dir) / filename
+        local_path = Path(local_dir) / filename
+
+        remote_path.parent.mkdir(parents=True, exist_ok=True)
+        local_path.parent.mkdir(parents=True, exist_ok=True)
+
+        if overwrite or not remote_path.exists():
+            remote_path.write_text(file_contents.rstrip() + "\n", encoding="utf-8")
+
+        shutil.copy2(remote_path, local_path)
+
+        receipt_path = local_path.parent / f"{local_path.stem}.receipt.txt"
+        receipt_path.write_text(
+            "\n".join(
+                [
+                    f"source={remote_path}",
+                    f"destination={local_path}",
+                    "transport=sftp-simulation",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+    def render(self, config: LocalFilesystemSftpConfig):
+        bp = self
+
+        with TaskGroup(group_id=self.step_id) as group:
+            @task(task_id="transfer")
+            def transfer() -> None:
+                resolved = bp.resolve_config(config, get_current_context())
+                bp._transfer(
+                    remote_dir=resolved.remote_dir,
+                    local_dir=resolved.local_dir,
+                    filename=resolved.filename,
+                    file_contents=resolved.file_contents,
+                    overwrite=resolved.overwrite,
+                )
+
+            transfer()
+        return group
+
+
+class LocalPowershellConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    input_filepath: str = Field(description="Path inspected from PowerShell.")
+    report_filepath: str = Field(description="Path where the PowerShell report is written.")
+    seed_contents: str = Field(description="Fallback file contents used when the input file does not already exist.")
+
+
+class LocalPowershell(Blueprint[LocalPowershellConfig]):
+    """Run a local PowerShell report step without requiring a connection."""
+
+    name = "local_powershell"
+
+    @staticmethod
+    def _run_report(input_filepath: str, report_filepath: str, seed_contents: str) -> None:
+        input_path = Path(input_filepath)
+        report_path = Path(report_filepath)
+
+        input_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+
+        if not input_path.exists():
+            input_path.write_text(seed_contents.rstrip() + "\n", encoding="utf-8")
+
+        shell = next(
+            (
+                candidate
+                for candidate in ("powershell.exe", "pwsh.exe", "pwsh", "powershell")
+                if shutil.which(candidate)
+            ),
+            None,
+        )
+        if not shell:
+            raise AirflowFailException(
+                "No PowerShell executable was found on PATH. Expected one of powershell.exe, pwsh.exe, pwsh, or powershell."
+            )
+
+        script = """
+$inputPath = $env:OTTO_INPUT_FILE
+$reportPath = $env:OTTO_REPORT_FILE
+$windowsInputPath = $inputPath -replace '/', '\\'
+$inputExists = Test-Path -LiteralPath $inputPath
+$lineCount = if ($inputExists) { (Get-Content -LiteralPath $inputPath).Count } else { 0 }
+$reportLines = @(
+    "timestamp=$(Get-Date -Format o)",
+    "computer_name=$env:COMPUTERNAME",
+    "user_name=$env:USERNAME",
+    "temp_dir=$env:TEMP",
+    "system_root=$env:SystemRoot",
+    "powershell_version=$($PSVersionTable.PSVersion)",
+    "os=$([System.Runtime.InteropServices.RuntimeInformation]::OSDescription)",
+    "input_path=$inputPath",
+    "input_path_windows=$windowsInputPath",
+    "input_exists=$inputExists",
+    "input_line_count=$lineCount"
+)
+Set-Content -LiteralPath $reportPath -Value $reportLines
+Get-Content -LiteralPath $reportPath
+""".strip()
+
+        env = os.environ.copy()
+        env["OTTO_INPUT_FILE"] = str(input_path)
+        env["OTTO_REPORT_FILE"] = str(report_path)
+
+        result = subprocess.run(
+            [shell, "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", script],
+            capture_output=True,
+            text=True,
+            env=env,
+            check=False,
+        )
+
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+
+        if result.returncode != 0:
+            raise AirflowFailException(
+                f"PowerShell command failed with exit code {result.returncode}."
+            )
+
+    def render(self, config: LocalPowershellConfig):
+        bp = self
+
+        with TaskGroup(group_id=self.step_id) as group:
+            @task(task_id="run")
+            def run() -> None:
+                resolved = bp.resolve_config(config, get_current_context())
+                bp._run_report(
+                    input_filepath=resolved.input_filepath,
+                    report_filepath=resolved.report_filepath,
+                    seed_contents=resolved.seed_contents,
+                )
+
+            run()
         return group
 
 
@@ -62,6 +221,8 @@ class SftpGet(Blueprint[SftpGetConfig]):
     """Download a file from SFTP into a local staging path."""
 
     def render(self, config: SftpGetConfig):
+        from airflow.providers.sftp.operators.sftp import SFTPOperator
+
         with TaskGroup(group_id=self.step_id) as group:
             SFTPOperator(
                 task_id="download",
@@ -87,6 +248,8 @@ class RemoteCommand(Blueprint[RemoteCommandConfig]):
     """Run a remote shell command through SSH."""
 
     def render(self, config: RemoteCommandConfig):
+        from airflow.providers.ssh.operators.ssh import SSHOperator
+
         with TaskGroup(group_id=self.step_id) as group:
             SSHOperator(
                 task_id="run",
@@ -113,6 +276,8 @@ class SnowflakeSql(Blueprint[SnowflakeSqlConfig]):
     """Execute SQL in Snowflake via the SQL API operator."""
 
     def render(self, config: SnowflakeSqlConfig):
+        from airflow.providers.snowflake.operators.snowflake import SnowflakeSqlApiOperator
+
         with TaskGroup(group_id=self.step_id) as group:
             SnowflakeSqlApiOperator(
                 task_id="execute_sql",
@@ -148,6 +313,9 @@ class HttpAsyncJob(Blueprint[HttpAsyncJobConfig]):
     """Submit an API-managed job and wait for completion with a deferrable sensor."""
 
     def render(self, config: HttpAsyncJobConfig):
+        from airflow.providers.http.operators.http import HttpOperator
+        from airflow.providers.http.sensors.http import HttpSensor
+
         payload = dict(config.payload)
         if config.tracking_payload_field:
             payload[config.tracking_payload_field] = config.tracking_id
@@ -194,6 +362,8 @@ class DatabricksNotebookRun(Blueprint[DatabricksNotebookRunConfig]):
     """Submit a Databricks notebook run."""
 
     def render(self, config: DatabricksNotebookRunConfig):
+        from airflow.providers.databricks.operators.databricks import DatabricksSubmitRunOperator
+
         with TaskGroup(group_id=self.step_id) as group:
             DatabricksSubmitRunOperator(
                 task_id="submit_run",
@@ -244,6 +414,8 @@ class ValidatedScriptExecution(Blueprint[ValidatedScriptExecutionConfig]):
             )
 
         runner_config = valid_combinations[(config.target_os, config.script_kind)]
+
+        from airflow.providers.ssh.operators.ssh import SSHOperator
 
         with TaskGroup(group_id=self.step_id) as group:
             SSHOperator(
