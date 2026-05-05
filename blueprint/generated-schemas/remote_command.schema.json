@@ -1,46 +1,40 @@
-2026-05-01T00:19:41.894176Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:41.894278Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:41.894317Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:41.894346Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:41.894371Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:41.894394Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
-{                                                                               
-  "additionalProperties": false,                                                
-  "properties": {                                                               
-    "ssh_conn_id": {                                                            
-      "description": "SSH connection ID for the remote runner.",                
-      "title": "Ssh Conn Id",                                                   
-      "type": "string"                                                          
-    },                                                                          
-    "command": {                                                                
-      "description": "Command to execute remotely.",                            
-      "title": "Command",                                                       
-      "type": "string"                                                          
-    },                                                                          
-    "pool": {                                                                   
-      "default": "remote_execution",                                            
-      "description": "Pool for remote-executed tasks.",                         
-      "title": "Pool",                                                          
-      "type": "string"                                                          
-    },                                                                          
-    "blueprint": {                                                              
-      "type": "string",                                                         
-      "const": "remote_command",                                                
-      "description": "The blueprint template to use"                            
-    },                                                                          
-    "version": {                                                                
-      "type": "integer",                                                        
-      "const": 1,                                                               
-      "description": "The blueprint version"                                    
-    }                                                                           
-  },                                                                            
-  "required": [                                                                 
-    "blueprint",                                                                
-    "version",                                                                  
-    "ssh_conn_id",                                                              
-    "command"                                                                   
-  ],                                                                            
-  "title": "remote_command",                                                    
-  "type": "object",                                                             
-  "$schema": "http://json-schema.org/draft-07/schema#"                          
-}                                                                               
+{
+  "additionalProperties": false,
+  "properties": {
+    "ssh_conn_id": {
+      "description": "SSH connection ID for the remote runner.",
+      "title": "Ssh Conn Id",
+      "type": "string"
+    },
+    "command": {
+      "description": "Command to execute remotely.",
+      "title": "Command",
+      "type": "string"
+    },
+    "pool": {
+      "default": "remote_execution",
+      "description": "Pool for remote-executed tasks.",
+      "title": "Pool",
+      "type": "string"
+    },
+    "blueprint": {
+      "type": "string",
+      "const": "remote_command",
+      "description": "The blueprint template to use"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "The blueprint version"
+    }
+  },
+  "required": [
+    "blueprint",
+    "version",
+    "ssh_conn_id",
+    "command"
+  ],
+  "title": "remote_command",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

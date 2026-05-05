@@ -1,70 +1,64 @@
-2026-05-01T00:19:44.691025Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:44.691126Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:44.691164Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:44.691193Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:44.691218Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:44.691244Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
-{                                                                               
-  "additionalProperties": false,                                                
-  "properties": {                                                               
-    "target_os": {                                                              
-      "description": "Target operating system.",                                
-      "title": "Target Os",                                                     
-      "type": "string"                                                          
-    },                                                                          
-    "script_kind": {                                                            
-      "description": "Script type, such as shell or powershell.",               
-      "title": "Script Kind",                                                   
-      "type": "string"                                                          
-    },                                                                          
-    "script_path": {                                                            
-      "description": "Path to the script on the remote host.",                  
-      "title": "Script Path",                                                   
-      "type": "string"                                                          
-    },                                                                          
-    "script_args": {                                                            
-      "default": "",                                                            
-      "description": "Arguments passed to the script.",                         
-      "title": "Script Args",                                                   
-      "type": "string"                                                          
-    },                                                                          
-    "windows_conn_id": {                                                        
-      "default": "windows_remote_executor",                                     
-      "description": "Connection for Windows execution.",                       
-      "title": "Windows Conn Id",                                               
-      "type": "string"                                                          
-    },                                                                          
-    "linux_conn_id": {                                                          
-      "default": "linux_remote_executor",                                       
-      "description": "Connection for Linux execution.",                         
-      "title": "Linux Conn Id",                                                 
-      "type": "string"                                                          
-    },                                                                          
-    "pool": {                                                                   
-      "default": "remote_execution",                                            
-      "description": "Pool for remote-executed tasks.",                         
-      "title": "Pool",                                                          
-      "type": "string"                                                          
-    },                                                                          
-    "blueprint": {                                                              
-      "type": "string",                                                         
-      "const": "validated_script_execution",                                    
-      "description": "The blueprint template to use"                            
-    },                                                                          
-    "version": {                                                                
-      "type": "integer",                                                        
-      "const": 1,                                                               
-      "description": "The blueprint version"                                    
-    }                                                                           
-  },                                                                            
-  "required": [                                                                 
-    "blueprint",                                                                
-    "version",                                                                  
-    "target_os",                                                                
-    "script_kind",                                                              
-    "script_path"                                                               
-  ],                                                                            
-  "title": "validated_script_execution",                                        
-  "type": "object",                                                             
-  "$schema": "http://json-schema.org/draft-07/schema#"                          
-}                                                                               
+{
+  "additionalProperties": false,
+  "properties": {
+    "target_os": {
+      "description": "Target operating system.",
+      "title": "Target Os",
+      "type": "string"
+    },
+    "script_kind": {
+      "description": "Script type, such as shell or powershell.",
+      "title": "Script Kind",
+      "type": "string"
+    },
+    "script_path": {
+      "description": "Path to the script on the remote host.",
+      "title": "Script Path",
+      "type": "string"
+    },
+    "script_args": {
+      "default": "",
+      "description": "Arguments passed to the script.",
+      "title": "Script Args",
+      "type": "string"
+    },
+    "windows_conn_id": {
+      "default": "windows_remote_executor",
+      "description": "Connection for Windows execution.",
+      "title": "Windows Conn Id",
+      "type": "string"
+    },
+    "linux_conn_id": {
+      "default": "linux_remote_executor",
+      "description": "Connection for Linux execution.",
+      "title": "Linux Conn Id",
+      "type": "string"
+    },
+    "pool": {
+      "default": "remote_execution",
+      "description": "Pool for remote-executed tasks.",
+      "title": "Pool",
+      "type": "string"
+    },
+    "blueprint": {
+      "type": "string",
+      "const": "validated_script_execution",
+      "description": "The blueprint template to use"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "The blueprint version"
+    }
+  },
+  "required": [
+    "blueprint",
+    "version",
+    "target_os",
+    "script_kind",
+    "script_path"
+  ],
+  "title": "validated_script_execution",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

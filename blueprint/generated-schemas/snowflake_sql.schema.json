@@ -1,64 +1,58 @@
-2026-05-01T00:19:43.769957Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:43.770061Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:43.770099Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:43.770128Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:43.770154Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:43.770177Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
-{                                                                               
-  "additionalProperties": false,                                                
-  "properties": {                                                               
-    "sql": {                                                                    
-      "description": "SQL statement to execute.",                               
-      "title": "Sql",                                                           
-      "type": "string"                                                          
-    },                                                                          
-    "snowflake_conn_id": {                                                      
-      "default": "snowflake_default",                                           
-      "description": "Snowflake connection ID.",                                
-      "title": "Snowflake Conn Id",                                             
-      "type": "string"                                                          
-    },                                                                          
-    "warehouse": {                                                              
-      "default": "TRANSFORMING",                                                
-      "description": "Snowflake warehouse.",                                    
-      "title": "Warehouse",                                                     
-      "type": "string"                                                          
-    },                                                                          
-    "database": {                                                               
-      "default": "ANALYTICS",                                                   
-      "description": "Snowflake database.",                                     
-      "title": "Database",                                                      
-      "type": "string"                                                          
-    },                                                                          
-    "schema": {                                                                 
-      "default": "GOLD",                                                        
-      "description": "Snowflake schema.",                                       
-      "title": "Schema",                                                        
-      "type": "string"                                                          
-    },                                                                          
-    "pool": {                                                                   
-      "default": "snowflake_queries",                                           
-      "description": "Pool for Snowflake work.",                                
-      "title": "Pool",                                                          
-      "type": "string"                                                          
-    },                                                                          
-    "blueprint": {                                                              
-      "type": "string",                                                         
-      "const": "snowflake_sql",                                                 
-      "description": "The blueprint template to use"                            
-    },                                                                          
-    "version": {                                                                
-      "type": "integer",                                                        
-      "const": 1,                                                               
-      "description": "The blueprint version"                                    
-    }                                                                           
-  },                                                                            
-  "required": [                                                                 
-    "blueprint",                                                                
-    "version",                                                                  
-    "sql"                                                                       
-  ],                                                                            
-  "title": "snowflake_sql",                                                     
-  "type": "object",                                                             
-  "$schema": "http://json-schema.org/draft-07/schema#"                          
-}                                                                               
+{
+  "additionalProperties": false,
+  "properties": {
+    "sql": {
+      "description": "SQL statement to execute.",
+      "title": "Sql",
+      "type": "string"
+    },
+    "snowflake_conn_id": {
+      "default": "snowflake_default",
+      "description": "Snowflake connection ID.",
+      "title": "Snowflake Conn Id",
+      "type": "string"
+    },
+    "warehouse": {
+      "default": "TRANSFORMING",
+      "description": "Snowflake warehouse.",
+      "title": "Warehouse",
+      "type": "string"
+    },
+    "database": {
+      "default": "ANALYTICS",
+      "description": "Snowflake database.",
+      "title": "Database",
+      "type": "string"
+    },
+    "schema": {
+      "default": "GOLD",
+      "description": "Snowflake schema.",
+      "title": "Schema",
+      "type": "string"
+    },
+    "pool": {
+      "default": "snowflake_queries",
+      "description": "Pool for Snowflake work.",
+      "title": "Pool",
+      "type": "string"
+    },
+    "blueprint": {
+      "type": "string",
+      "const": "snowflake_sql",
+      "description": "The blueprint template to use"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "The blueprint version"
+    }
+  },
+  "required": [
+    "blueprint",
+    "version",
+    "sql"
+  ],
+  "title": "snowflake_sql",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

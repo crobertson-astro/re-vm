@@ -1,82 +1,76 @@
-2026-05-01T00:19:40.017108Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:40.017213Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:40.017252Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:40.017282Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:40.017307Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:40.017332Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
-{                                                                               
-  "additionalProperties": false,                                                
-  "properties": {                                                               
-    "databricks_conn_id": {                                                     
-      "default": "databricks_default",                                          
-      "description": "Databricks connection ID.",                               
-      "title": "Databricks Conn Id",                                            
-      "type": "string"                                                          
-    },                                                                          
-    "run_name": {                                                               
-      "description": "Databricks run name.",                                    
-      "title": "Run Name",                                                      
-      "type": "string"                                                          
-    },                                                                          
-    "existing_cluster_id": {                                                    
-      "description": "Existing cluster ID.",                                    
-      "title": "Existing Cluster Id",                                           
-      "type": "string"                                                          
-    },                                                                          
-    "notebook_path": {                                                          
-      "description": "Notebook path.",                                          
-      "title": "Notebook Path",                                                 
-      "type": "string"                                                          
-    },                                                                          
-    "base_parameters": {                                                        
-      "additionalProperties": {                                                 
-        "anyOf": [                                                              
-          {                                                                     
-            "type": "string"                                                    
-          },                                                                    
-          {                                                                     
-            "type": "integer"                                                   
-          },                                                                    
-          {                                                                     
-            "type": "number"                                                    
-          },                                                                    
-          {                                                                     
-            "type": "boolean"                                                   
-          },                                                                    
-          {                                                                     
-            "type": "null"                                                      
-          }                                                                     
-        ]                                                                       
-      },                                                                        
-      "description": "Notebook parameters.",                                    
-      "title": "Base Parameters",                                               
-      "type": "object"                                                          
-    },                                                                          
-    "pool": {                                                                   
-      "default": "databricks_jobs",                                             
-      "description": "Pool for Databricks job submission and monitoring.",      
-      "title": "Pool",                                                          
-      "type": "string"                                                          
-    },                                                                          
-    "blueprint": {                                                              
-      "type": "string",                                                         
-      "const": "databricks_notebook_run",                                       
-      "description": "The blueprint template to use"                            
-    },                                                                          
-    "version": {                                                                
-      "type": "integer",                                                        
-      "const": 1,                                                               
-      "description": "The blueprint version"                                    
-    }                                                                           
-  },                                                                            
-  "required": [                                                                 
-    "blueprint",                                                                
-    "version",                                                                  
-    "run_name",                                                                 
-    "existing_cluster_id",                                                      
-    "notebook_path"                                                             
-  ],                                                                            
-  "title": "databricks_notebook_run",                                           
-  "type": "object",                                                             
-  "$schema": "http://json-schema.org/draft-07/schema#"                          
-}                                                                               
+{
+  "additionalProperties": false,
+  "properties": {
+    "databricks_conn_id": {
+      "default": "databricks_default",
+      "description": "Databricks connection ID.",
+      "title": "Databricks Conn Id",
+      "type": "string"
+    },
+    "run_name": {
+      "description": "Databricks run name.",
+      "title": "Run Name",
+      "type": "string"
+    },
+    "existing_cluster_id": {
+      "description": "Existing cluster ID.",
+      "title": "Existing Cluster Id",
+      "type": "string"
+    },
+    "notebook_path": {
+      "description": "Notebook path.",
+      "title": "Notebook Path",
+      "type": "string"
+    },
+    "base_parameters": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "description": "Notebook parameters.",
+      "title": "Base Parameters",
+      "type": "object"
+    },
+    "pool": {
+      "default": "databricks_jobs",
+      "description": "Pool for Databricks job submission and monitoring.",
+      "title": "Pool",
+      "type": "string"
+    },
+    "blueprint": {
+      "type": "string",
+      "const": "databricks_notebook_run",
+      "description": "The blueprint template to use"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "The blueprint version"
+    }
+  },
+  "required": [
+    "blueprint",
+    "version",
+    "run_name",
+    "existing_cluster_id",
+    "notebook_path"
+  ],
+  "title": "databricks_notebook_run",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

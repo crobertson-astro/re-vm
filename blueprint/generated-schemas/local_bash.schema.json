@@ -1,7 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "local_bash",
-  "type": "object",
   "additionalProperties": false,
   "properties": {
     "bash_command": {
@@ -10,43 +7,60 @@
       "type": "string"
     },
     "env": {
-      "description": "Optional environment variables.",
-      "title": "Env",
-      "type": "object",
-      "default": {},
       "additionalProperties": {
         "anyOf": [
-          { "type": "string" },
-          { "type": "integer" },
-          { "type": "number" },
-          { "type": "boolean" },
-          { "type": "null" }
+          {
+            "type": "string"
+          },
+          {
+            "type": "integer"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
         ]
-      }
+      },
+      "description": "Optional environment variables.",
+      "title": "Env",
+      "type": "object"
     },
     "cwd": {
-      "description": "Optional working directory for the command.",
-      "title": "Cwd",
-      "default": null,
       "anyOf": [
-        { "type": "string" },
-        { "type": "null" }
-      ]
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Optional working directory for the command.",
+      "title": "Cwd"
     },
     "append_env": {
+      "default": false,
       "description": "Append env values to the worker environment.",
       "title": "Append Env",
-      "type": "boolean",
-      "default": false
+      "type": "boolean"
     },
     "pool": {
-      "description": "Optional pool for the bash task.",
-      "title": "Pool",
-      "default": null,
       "anyOf": [
-        { "type": "string" },
-        { "type": "null" }
-      ]
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Optional pool for the bash task.",
+      "title": "Pool"
     },
     "blueprint": {
       "type": "string",
@@ -59,5 +73,12 @@
       "description": "The blueprint version"
     }
   },
-  "required": ["blueprint", "version", "bash_command"]
+  "required": [
+    "blueprint",
+    "version",
+    "bash_command"
+  ],
+  "title": "local_bash",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
 }

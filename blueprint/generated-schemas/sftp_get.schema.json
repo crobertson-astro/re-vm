@@ -1,58 +1,52 @@
-2026-05-01T00:19:42.825476Z [info     ] setup plugin alembic.autogenerate.schemas [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:42.825582Z [info     ] setup plugin alembic.autogenerate.tables [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:42.825620Z [info     ] setup plugin alembic.autogenerate.types [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:42.825648Z [info     ] setup plugin alembic.autogenerate.constraints [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:42.825672Z [info     ] setup plugin alembic.autogenerate.defaults [alembic.runtime.plugins] loc=plugins.py:37
-2026-05-01T00:19:42.825695Z [info     ] setup plugin alembic.autogenerate.comments [alembic.runtime.plugins] loc=plugins.py:37
-{                                                                               
-  "additionalProperties": false,                                                
-  "properties": {                                                               
-    "ssh_conn_id": {                                                            
-      "default": "vendor_sftp_default",                                         
-      "description": "SFTP connection ID.",                                     
-      "title": "Ssh Conn Id",                                                   
-      "type": "string"                                                          
-    },                                                                          
-    "remote_filepath": {                                                        
-      "description": "Source path on the SFTP server.",                         
-      "title": "Remote Filepath",                                               
-      "type": "string"                                                          
-    },                                                                          
-    "local_filepath": {                                                         
-      "description": "Local destination path.",                                 
-      "title": "Local Filepath",                                                
-      "type": "string"                                                          
-    },                                                                          
-    "create_intermediate_dirs": {                                               
-      "default": true,                                                          
-      "description": "Create local directories if needed.",                     
-      "title": "Create Intermediate Dirs",                                      
-      "type": "boolean"                                                         
-    },                                                                          
-    "pool": {                                                                   
-      "default": "remote_execution",                                            
-      "description": "Pool for remote-executed tasks.",                         
-      "title": "Pool",                                                          
-      "type": "string"                                                          
-    },                                                                          
-    "blueprint": {                                                              
-      "type": "string",                                                         
-      "const": "sftp_get",                                                      
-      "description": "The blueprint template to use"                            
-    },                                                                          
-    "version": {                                                                
-      "type": "integer",                                                        
-      "const": 1,                                                               
-      "description": "The blueprint version"                                    
-    }                                                                           
-  },                                                                            
-  "required": [                                                                 
-    "blueprint",                                                                
-    "version",                                                                  
-    "remote_filepath",                                                          
-    "local_filepath"                                                            
-  ],                                                                            
-  "title": "sftp_get",                                                          
-  "type": "object",                                                             
-  "$schema": "http://json-schema.org/draft-07/schema#"                          
-}                                                                               
+{
+  "additionalProperties": false,
+  "properties": {
+    "ssh_conn_id": {
+      "default": "vendor_sftp_default",
+      "description": "SFTP connection ID.",
+      "title": "Ssh Conn Id",
+      "type": "string"
+    },
+    "remote_filepath": {
+      "description": "Source path on the SFTP server.",
+      "title": "Remote Filepath",
+      "type": "string"
+    },
+    "local_filepath": {
+      "description": "Local destination path.",
+      "title": "Local Filepath",
+      "type": "string"
+    },
+    "create_intermediate_dirs": {
+      "default": true,
+      "description": "Create local directories if needed.",
+      "title": "Create Intermediate Dirs",
+      "type": "boolean"
+    },
+    "pool": {
+      "default": "remote_execution",
+      "description": "Pool for remote-executed tasks.",
+      "title": "Pool",
+      "type": "string"
+    },
+    "blueprint": {
+      "type": "string",
+      "const": "sftp_get",
+      "description": "The blueprint template to use"
+    },
+    "version": {
+      "type": "integer",
+      "const": 1,
+      "description": "The blueprint version"
+    }
+  },
+  "required": [
+    "blueprint",
+    "version",
+    "remote_filepath",
+    "local_filepath"
+  ],
+  "title": "sftp_get",
+  "type": "object",
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
