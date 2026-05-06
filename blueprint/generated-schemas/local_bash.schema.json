@@ -1,84 +1,68 @@
-{
-  "additionalProperties": false,
-  "properties": {
-    "bash_command": {
-      "description": "Bash command to execute locally.",
-      "title": "Bash Command",
-      "type": "string"
-    },
-    "env": {
-      "additionalProperties": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "integer"
-          },
-          {
-            "type": "number"
-          },
-          {
-            "type": "boolean"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "description": "Optional environment variables.",
-      "title": "Env",
-      "type": "object"
-    },
-    "cwd": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional working directory for the command.",
-      "title": "Cwd"
-    },
-    "append_env": {
-      "default": false,
-      "description": "Append env values to the worker environment.",
-      "title": "Append Env",
-      "type": "boolean"
-    },
-    "pool": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional pool for the bash task.",
-      "title": "Pool"
-    },
-    "blueprint": {
-      "type": "string",
-      "const": "local_bash",
-      "description": "The blueprint template to use"
-    },
-    "version": {
-      "type": "integer",
-      "const": 1,
-      "description": "The blueprint version"
-    }
-  },
-  "required": [
-    "blueprint",
-    "version",
-    "bash_command"
-  ],
-  "title": "local_bash",
-  "type": "object",
-  "$schema": "http://json-schema.org/draft-07/schema#"
-}
+{                                                                                                                                                                                                                          
+  "additionalProperties": false,                                                                                                                                                                                           
+  "properties": {                                                                                                                                                                                                          
+    "bash_command": {                                                                                                                                                                                                      
+      "description": "Bash command to execute locally.",                                                                                                                                                                   
+      "title": "Bash Command",                                                                                                                                                                                             
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "env": {                                                                                                                                                                                                               
+      "additionalProperties": {                                                                                                                                                                                            
+        "type": "string"                                                                                                                                                                                                   
+      },                                                                                                                                                                                                                   
+      "description": "Optional environment variables.",                                                                                                                                                                    
+      "title": "Env",                                                                                                                                                                                                      
+      "type": "object"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "cwd": {                                                                                                                                                                                                               
+      "anyOf": [                                                                                                                                                                                                           
+        {                                                                                                                                                                                                                  
+          "type": "string"                                                                                                                                                                                                 
+        },                                                                                                                                                                                                                 
+        {                                                                                                                                                                                                                  
+          "type": "null"                                                                                                                                                                                                   
+        }                                                                                                                                                                                                                  
+      ],                                                                                                                                                                                                                   
+      "default": null,                                                                                                                                                                                                     
+      "description": "Optional working directory for the command.",                                                                                                                                                        
+      "title": "Cwd"                                                                                                                                                                                                       
+    },                                                                                                                                                                                                                     
+    "append_env": {                                                                                                                                                                                                        
+      "default": false,                                                                                                                                                                                                    
+      "description": "Append env values to the worker environment.",                                                                                                                                                       
+      "title": "Append Env",                                                                                                                                                                                               
+      "type": "boolean"                                                                                                                                                                                                    
+    },                                                                                                                                                                                                                     
+    "pool": {                                                                                                                                                                                                              
+      "anyOf": [                                                                                                                                                                                                           
+        {                                                                                                                                                                                                                  
+          "type": "string"                                                                                                                                                                                                 
+        },                                                                                                                                                                                                                 
+        {                                                                                                                                                                                                                  
+          "type": "null"                                                                                                                                                                                                   
+        }                                                                                                                                                                                                                  
+      ],                                                                                                                                                                                                                   
+      "default": null,                                                                                                                                                                                                     
+      "description": "Optional pool for the bash task.",                                                                                                                                                                   
+      "title": "Pool"                                                                                                                                                                                                      
+    },                                                                                                                                                                                                                     
+    "blueprint": {                                                                                                                                                                                                         
+      "type": "string",                                                                                                                                                                                                    
+      "const": "local_bash",                                                                                                                                                                                               
+      "description": "The blueprint template to use"                                                                                                                                                                       
+    },                                                                                                                                                                                                                     
+    "version": {                                                                                                                                                                                                           
+      "type": "integer",                                                                                                                                                                                                   
+      "const": 1,                                                                                                                                                                                                          
+      "description": "The blueprint version"                                                                                                                                                                               
+    }                                                                                                                                                                                                                      
+  },                                                                                                                                                                                                                       
+  "required": [                                                                                                                                                                                                            
+    "blueprint",                                                                                                                                                                                                           
+    "version",                                                                                                                                                                                                             
+    "bash_command"                                                                                                                                                                                                         
+  ],                                                                                                                                                                                                                       
+  "title": "local_bash",                                                                                                                                                                                                   
+  "type": "object",                                                                                                                                                                                                        
+  "$schema": "http://json-schema.org/draft-07/schema#"                                                                                                                                                                     
+}                                                                                                                                                                                                                          

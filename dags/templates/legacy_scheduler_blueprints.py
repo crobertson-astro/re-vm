@@ -15,14 +15,12 @@ except (ImportError, AttributeError):
 from blueprint import BaseModel, Blueprint, Field
 from pydantic import ConfigDict
 
-YamlScalar = str | int | float | bool | None
-
 
 class LocalBashConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     bash_command: str = Field(description="Bash command to execute locally.")
-    env: dict[str, YamlScalar] = Field(default_factory=dict, description="Optional environment variables.")
+    env: dict[str, str] = Field(default_factory=dict, description="Optional environment variables.")
     cwd: str | None = Field(default=None, description="Optional working directory for the command.")
     append_env: bool = Field(default=False, description="Append env values to the worker environment.")
     pool: str | None = Field(default=None, description="Optional pool for the bash task.")
@@ -298,7 +296,7 @@ class HttpAsyncJobConfig(BaseModel):
     http_conn_id: str = Field(description="HTTP connection ID.")
     submit_endpoint: str = Field(description="Submission endpoint.")
     status_endpoint_prefix: str = Field(description="Prefix for job-status polling endpoint.")
-    payload: dict[str, YamlScalar] = Field(default_factory=dict, description="JSON payload for submission.")
+    payload: dict[str, str] = Field(default_factory=dict, description="JSON payload for submission.")
     tracking_id: str = Field(default="{{ run_id }}", description="Deterministic identifier used for submission and polling.")
     tracking_payload_field: str | None = Field(default=None, description="Optional payload field that should receive the tracking identifier.")
     completion_key: str = Field(default="state", description="Response key that contains terminal state.")
@@ -354,7 +352,7 @@ class DatabricksNotebookRunConfig(BaseModel):
     run_name: str = Field(description="Databricks run name.")
     existing_cluster_id: str = Field(description="Existing cluster ID.")
     notebook_path: str = Field(description="Notebook path.")
-    base_parameters: dict[str, YamlScalar] = Field(default_factory=dict, description="Notebook parameters.")
+    base_parameters: dict[str, str] = Field(default_factory=dict, description="Notebook parameters.")
     pool: str = Field(default="databricks_jobs", description="Pool for Databricks job submission and monitoring.")
 
 

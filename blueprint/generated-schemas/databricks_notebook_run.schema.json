@@ -1,76 +1,60 @@
-{
-  "additionalProperties": false,
-  "properties": {
-    "databricks_conn_id": {
-      "default": "databricks_default",
-      "description": "Databricks connection ID.",
-      "title": "Databricks Conn Id",
-      "type": "string"
-    },
-    "run_name": {
-      "description": "Databricks run name.",
-      "title": "Run Name",
-      "type": "string"
-    },
-    "existing_cluster_id": {
-      "description": "Existing cluster ID.",
-      "title": "Existing Cluster Id",
-      "type": "string"
-    },
-    "notebook_path": {
-      "description": "Notebook path.",
-      "title": "Notebook Path",
-      "type": "string"
-    },
-    "base_parameters": {
-      "additionalProperties": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "integer"
-          },
-          {
-            "type": "number"
-          },
-          {
-            "type": "boolean"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "description": "Notebook parameters.",
-      "title": "Base Parameters",
-      "type": "object"
-    },
-    "pool": {
-      "default": "databricks_jobs",
-      "description": "Pool for Databricks job submission and monitoring.",
-      "title": "Pool",
-      "type": "string"
-    },
-    "blueprint": {
-      "type": "string",
-      "const": "databricks_notebook_run",
-      "description": "The blueprint template to use"
-    },
-    "version": {
-      "type": "integer",
-      "const": 1,
-      "description": "The blueprint version"
-    }
-  },
-  "required": [
-    "blueprint",
-    "version",
-    "run_name",
-    "existing_cluster_id",
-    "notebook_path"
-  ],
-  "title": "databricks_notebook_run",
-  "type": "object",
-  "$schema": "http://json-schema.org/draft-07/schema#"
-}
+{                                                                                                                                                                                                                          
+  "additionalProperties": false,                                                                                                                                                                                           
+  "properties": {                                                                                                                                                                                                          
+    "databricks_conn_id": {                                                                                                                                                                                                
+      "default": "databricks_default",                                                                                                                                                                                     
+      "description": "Databricks connection ID.",                                                                                                                                                                          
+      "title": "Databricks Conn Id",                                                                                                                                                                                       
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "run_name": {                                                                                                                                                                                                          
+      "description": "Databricks run name.",                                                                                                                                                                               
+      "title": "Run Name",                                                                                                                                                                                                 
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "existing_cluster_id": {                                                                                                                                                                                               
+      "description": "Existing cluster ID.",                                                                                                                                                                               
+      "title": "Existing Cluster Id",                                                                                                                                                                                      
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "notebook_path": {                                                                                                                                                                                                     
+      "description": "Notebook path.",                                                                                                                                                                                     
+      "title": "Notebook Path",                                                                                                                                                                                            
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "base_parameters": {                                                                                                                                                                                                   
+      "additionalProperties": {                                                                                                                                                                                            
+        "type": "string"                                                                                                                                                                                                   
+      },                                                                                                                                                                                                                   
+      "description": "Notebook parameters.",                                                                                                                                                                               
+      "title": "Base Parameters",                                                                                                                                                                                          
+      "type": "object"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "pool": {                                                                                                                                                                                                              
+      "default": "databricks_jobs",                                                                                                                                                                                        
+      "description": "Pool for Databricks job submission and monitoring.",                                                                                                                                                 
+      "title": "Pool",                                                                                                                                                                                                     
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "blueprint": {                                                                                                                                                                                                         
+      "type": "string",                                                                                                                                                                                                    
+      "const": "databricks_notebook_run",                                                                                                                                                                                  
+      "description": "The blueprint template to use"                                                                                                                                                                       
+    },                                                                                                                                                                                                                     
+    "version": {                                                                                                                                                                                                           
+      "type": "integer",                                                                                                                                                                                                   
+      "const": 1,                                                                                                                                                                                                          
+      "description": "The blueprint version"                                                                                                                                                                               
+    }                                                                                                                                                                                                                      
+  },                                                                                                                                                                                                                       
+  "required": [                                                                                                                                                                                                            
+    "blueprint",                                                                                                                                                                                                           
+    "version",                                                                                                                                                                                                             
+    "run_name",                                                                                                                                                                                                            
+    "existing_cluster_id",                                                                                                                                                                                                 
+    "notebook_path"                                                                                                                                                                                                        
+  ],                                                                                                                                                                                                                       
+  "title": "databricks_notebook_run",                                                                                                                                                                                      
+  "type": "object",                                                                                                                                                                                                        
+  "$schema": "http://json-schema.org/draft-07/schema#"                                                                                                                                                                     
+}                                                                                                                                                                                                                          

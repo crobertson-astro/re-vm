@@ -1,123 +1,107 @@
-{
-  "additionalProperties": false,
-  "properties": {
-    "http_conn_id": {
-      "description": "HTTP connection ID.",
-      "title": "Http Conn Id",
-      "type": "string"
-    },
-    "submit_endpoint": {
-      "description": "Submission endpoint.",
-      "title": "Submit Endpoint",
-      "type": "string"
-    },
-    "status_endpoint_prefix": {
-      "description": "Prefix for job-status polling endpoint.",
-      "title": "Status Endpoint Prefix",
-      "type": "string"
-    },
-    "payload": {
-      "additionalProperties": {
-        "anyOf": [
-          {
-            "type": "string"
-          },
-          {
-            "type": "integer"
-          },
-          {
-            "type": "number"
-          },
-          {
-            "type": "boolean"
-          },
-          {
-            "type": "null"
-          }
-        ]
-      },
-      "description": "JSON payload for submission.",
-      "title": "Payload",
-      "type": "object"
-    },
-    "tracking_id": {
-      "default": "{{ run_id }}",
-      "description": "Deterministic identifier used for submission and polling.",
-      "title": "Tracking Id",
-      "type": "string"
-    },
-    "tracking_payload_field": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "description": "Optional payload field that should receive the tracking identifier.",
-      "title": "Tracking Payload Field"
-    },
-    "completion_key": {
-      "default": "state",
-      "description": "Response key that contains terminal state.",
-      "title": "Completion Key",
-      "type": "string"
-    },
-    "success_values": {
-      "description": "Values treated as successful completion.",
-      "items": {
-        "type": "string"
-      },
-      "title": "Success Values",
-      "type": "array"
-    },
-    "method": {
-      "default": "POST",
-      "description": "HTTP method for submission.",
-      "title": "Method",
-      "type": "string"
-    },
-    "poke_interval_seconds": {
-      "default": 300,
-      "description": "Polling interval in seconds.",
-      "minimum": 5,
-      "title": "Poke Interval Seconds",
-      "type": "integer"
-    },
-    "timeout_seconds": {
-      "default": 36000,
-      "description": "Polling timeout in seconds.",
-      "minimum": 60,
-      "title": "Timeout Seconds",
-      "type": "integer"
-    },
-    "pool": {
-      "default": "cloud_control_plane",
-      "description": "Pool for API orchestration tasks.",
-      "title": "Pool",
-      "type": "string"
-    },
-    "blueprint": {
-      "type": "string",
-      "const": "http_async_job",
-      "description": "The blueprint template to use"
-    },
-    "version": {
-      "type": "integer",
-      "const": 1,
-      "description": "The blueprint version"
-    }
-  },
-  "required": [
-    "blueprint",
-    "version",
-    "http_conn_id",
-    "submit_endpoint",
-    "status_endpoint_prefix"
-  ],
-  "title": "http_async_job",
-  "type": "object",
-  "$schema": "http://json-schema.org/draft-07/schema#"
-}
+{                                                                                                                                                                                                                          
+  "additionalProperties": false,                                                                                                                                                                                           
+  "properties": {                                                                                                                                                                                                          
+    "http_conn_id": {                                                                                                                                                                                                      
+      "description": "HTTP connection ID.",                                                                                                                                                                                
+      "title": "Http Conn Id",                                                                                                                                                                                             
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "submit_endpoint": {                                                                                                                                                                                                   
+      "description": "Submission endpoint.",                                                                                                                                                                               
+      "title": "Submit Endpoint",                                                                                                                                                                                          
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "status_endpoint_prefix": {                                                                                                                                                                                            
+      "description": "Prefix for job-status polling endpoint.",                                                                                                                                                            
+      "title": "Status Endpoint Prefix",                                                                                                                                                                                   
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "payload": {                                                                                                                                                                                                           
+      "additionalProperties": {                                                                                                                                                                                            
+        "type": "string"                                                                                                                                                                                                   
+      },                                                                                                                                                                                                                   
+      "description": "JSON payload for submission.",                                                                                                                                                                       
+      "title": "Payload",                                                                                                                                                                                                  
+      "type": "object"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "tracking_id": {                                                                                                                                                                                                       
+      "default": "{{ run_id }}",                                                                                                                                                                                           
+      "description": "Deterministic identifier used for submission and polling.",                                                                                                                                          
+      "title": "Tracking Id",                                                                                                                                                                                              
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "tracking_payload_field": {                                                                                                                                                                                            
+      "anyOf": [                                                                                                                                                                                                           
+        {                                                                                                                                                                                                                  
+          "type": "string"                                                                                                                                                                                                 
+        },                                                                                                                                                                                                                 
+        {                                                                                                                                                                                                                  
+          "type": "null"                                                                                                                                                                                                   
+        }                                                                                                                                                                                                                  
+      ],                                                                                                                                                                                                                   
+      "default": null,                                                                                                                                                                                                     
+      "description": "Optional payload field that should receive the tracking identifier.",                                                                                                                                
+      "title": "Tracking Payload Field"                                                                                                                                                                                    
+    },                                                                                                                                                                                                                     
+    "completion_key": {                                                                                                                                                                                                    
+      "default": "state",                                                                                                                                                                                                  
+      "description": "Response key that contains terminal state.",                                                                                                                                                         
+      "title": "Completion Key",                                                                                                                                                                                           
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "success_values": {                                                                                                                                                                                                    
+      "description": "Values treated as successful completion.",                                                                                                                                                           
+      "items": {                                                                                                                                                                                                           
+        "type": "string"                                                                                                                                                                                                   
+      },                                                                                                                                                                                                                   
+      "title": "Success Values",                                                                                                                                                                                           
+      "type": "array"                                                                                                                                                                                                      
+    },                                                                                                                                                                                                                     
+    "method": {                                                                                                                                                                                                            
+      "default": "POST",                                                                                                                                                                                                   
+      "description": "HTTP method for submission.",                                                                                                                                                                        
+      "title": "Method",                                                                                                                                                                                                   
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "poke_interval_seconds": {                                                                                                                                                                                             
+      "default": 300,                                                                                                                                                                                                      
+      "description": "Polling interval in seconds.",                                                                                                                                                                       
+      "minimum": 5,                                                                                                                                                                                                        
+      "title": "Poke Interval Seconds",                                                                                                                                                                                    
+      "type": "integer"                                                                                                                                                                                                    
+    },                                                                                                                                                                                                                     
+    "timeout_seconds": {                                                                                                                                                                                                   
+      "default": 36000,                                                                                                                                                                                                    
+      "description": "Polling timeout in seconds.",                                                                                                                                                                        
+      "minimum": 60,                                                                                                                                                                                                       
+      "title": "Timeout Seconds",                                                                                                                                                                                          
+      "type": "integer"                                                                                                                                                                                                    
+    },                                                                                                                                                                                                                     
+    "pool": {                                                                                                                                                                                                              
+      "default": "cloud_control_plane",                                                                                                                                                                                    
+      "description": "Pool for API orchestration tasks.",                                                                                                                                                                  
+      "title": "Pool",                                                                                                                                                                                                     
+      "type": "string"                                                                                                                                                                                                     
+    },                                                                                                                                                                                                                     
+    "blueprint": {                                                                                                                                                                                                         
+      "type": "string",                                                                                                                                                                                                    
+      "const": "http_async_job",                                                                                                                                                                                           
+      "description": "The blueprint template to use"                                                                                                                                                                       
+    },                                                                                                                                                                                                                     
+    "version": {                                                                                                                                                                                                           
+      "type": "integer",                                                                                                                                                                                                   
+      "const": 1,                                                                                                                                                                                                          
+      "description": "The blueprint version"                                                                                                                                                                               
+    }                                                                                                                                                                                                                      
+  },                                                                                                                                                                                                                       
+  "required": [                                                                                                                                                                                                            
+    "blueprint",                                                                                                                                                                                                           
+    "version",                                                                                                                                                                                                             
+    "http_conn_id",                                                                                                                                                                                                        
+    "submit_endpoint",                                                                                                                                                                                                     
+    "status_endpoint_prefix"                                                                                                                                                                                               
+  ],                                                                                                                                                                                                                       
+  "title": "http_async_job",                                                                                                                                                                                               
+  "type": "object",                                                                                                                                                                                                        
+  "$schema": "http://json-schema.org/draft-07/schema#"                                                                                                                                                                     
+}                                                                                                                                                                                                                          
