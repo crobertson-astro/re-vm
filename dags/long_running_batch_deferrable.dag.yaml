@@ -20,10 +20,6 @@ steps:
     success_values: [COMPLETED]
     poke_interval_seconds: 300
     timeout_seconds: 36000
-    payload:
-      business_date: "{{ context.ds }}"
-      requested_by: airflow
-      batch_name: weekly-risk-batch
 
   publish_audit:
     blueprint: snowflake_sql

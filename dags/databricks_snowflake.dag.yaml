@@ -16,9 +16,6 @@ steps:
     run_name: "positions_{{ context.ds_nodash }}"
     existing_cluster_id: REPLACE_WITH_DATABRICKS_CLUSTER_ID
     notebook_path: /Shared/analytics/positions_bronze_to_silver
-    base_parameters:
-      business_date: "{{ context.ds }}"
-      dataset: vendor_positions
 
   publish_curated_tables:
     blueprint: snowflake_sql

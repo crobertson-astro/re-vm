@@ -22,9 +22,6 @@ steps:
     run_name: "hybrid_positions_{{ context.ds_nodash }}"
     existing_cluster_id: REPLACE_WITH_DATABRICKS_CLUSTER_ID
     notebook_path: /Shared/analytics/hybrid_positions_enrichment
-    base_parameters:
-      business_date: "{{ context.ds }}"
-      source_system: onprem-linux
 
   publish_to_snowflake:
     blueprint: snowflake_sql
