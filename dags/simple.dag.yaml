@@ -1,0 +1,31 @@
+dag_id: simple
+schedule: null
+tags: [ blueprint, simple ]
+catchup: false
+start_date: "2024-01-01"
+description: "Simple blueprint DAG: bash hello world -> SSIS job on Windows -> HTTP POST to an endpoint."
+
+steps:
+  say_hello:
+    blueprint: local_bash
+    bash_command: echo "hello world"
+
+  run_ssis_job:
+    blueprint: validated_script_execution
+    depends_on: [ say_hello ]
+    script_args: '-JobName "simple_ssis_job" -BusinessDate "{{ context.ds }}" -RequestId "{{ context.run_id }}"'
+    script_kind: powershell
+    script_path: C:/jobs/trigger_ssis_job.ps1
+    target_os: windows
+
+  post_to_endpoint:
+    blueprint: http_async_job
+    depends_on: [ run_ssis_job ]
+    http_conn_id: service_api_default
+    method: POST
+    status_endpoint_prefix: /api/v1/simple/post
+    submit_endpoint: /api/v1/simple/post
+owner: data-platform
+retries: 2
+retry_delay_minutes: 5
+max_active_runs: 1
